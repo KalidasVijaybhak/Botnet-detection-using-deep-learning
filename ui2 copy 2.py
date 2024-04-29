@@ -3,7 +3,7 @@ import os
 import tkinter
 from tkinter import messagebox
 import customtkinter
-from csv_view import CsvWindow
+from csv_view import CsvWindow, CsvWindowThread
 from default_test import DefaultViewFrame
 from modules.default_view import DefaultView
 from tkinter import filedialog as fd
@@ -48,17 +48,27 @@ class App(customtkinter.CTk):
     def frame1_selector(self):
         App.frames["frame2"].pack_forget()
         App.frames["frame3"].pack_forget()
+        App.frames["frame4"].pack_forget()
         App.frames["frame1"].pack(in_=self.right_side_container,side=tkinter.TOP, fill=tkinter.BOTH, expand=True, padx=0, pady=0)
 
     def frame2_selector(self):
         App.frames["frame1"].pack_forget()
         App.frames["frame3"].pack_forget()
+        App.frames["frame4"].pack_forget()
         App.frames["frame2"].pack(in_=self.right_side_container,side=tkinter.TOP, fill=tkinter.BOTH, expand=True, padx=0, pady=0)
     def frame3_selector(self):
         App.frames["frame1"].pack_forget()
-
+        App.frames["frame4"].pack_forget()
         App.frames["frame2"].pack_forget()
         App.frames["frame3"].pack(in_=self.right_side_container,side=tkinter.TOP, fill=tkinter.BOTH, expand=True, padx=0, pady=0)
+
+    def frame4_selector(self):
+        App.frames["frame1"].pack_forget()
+
+        App.frames["frame2"].pack_forget()
+        App.frames["frame3"].pack_forget()
+        App.frames["frame4"].pack(in_=self.right_side_container,side=tkinter.TOP, fill=tkinter.BOTH, expand=True, padx=0, pady=0)
+
     
     def __init__(self):
         super().__init__()
@@ -115,7 +125,7 @@ class App(customtkinter.CTk):
         self.sidebar_button_3 = customtkinter.CTkButton(self.sidebar_frame, text="Test Network Data", command=self.frame3_selector)
         self.sidebar_button_3.pack(side=tkinter.TOP, padx=20, pady=10)
 
-        self.sidebar_button_4 = customtkinter.CTkButton(self.sidebar_frame, text="Capture Net Data", command=self.frame1_selector)
+        self.sidebar_button_4 = customtkinter.CTkButton(self.sidebar_frame, text="Capture Net Data", command=self.frame4_selector)
         self.sidebar_button_4.pack(side=tkinter.TOP, padx=20, pady=10)
 
         self.appearance_mode_label = customtkinter.CTkLabel(self.sidebar_frame, text="", anchor="w")
@@ -234,7 +244,7 @@ class App(customtkinter.CTk):
         bt_detect.grid(row=1, column=0, columnspan=3, padx=(20, 20), pady=(10, 20), sticky="nsew")
         # self.progressbar_1 = customtkinter.CTkProgressBar(App.frames['frame3'])
         # self.progressbar_1.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="nsew")
-        self.bt_side1 = customtkinter.CTkButton(self.frames['frame3'], text="Live Detect", command=self.capture_interval)
+        self.bt_side1 = customtkinter.CTkButton(self.frames['frame3'], text="Live Detect", command=self.capture_interval_start)
         self.bt_side1.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew")
         
         self.bt_side2 = customtkinter.CTkButton(self.frames['frame3'], text="Stop", command=self.stop_capture_interval)
@@ -257,11 +267,14 @@ class App(customtkinter.CTk):
         self.plot_frame = customtkinter.CTkFrame(self.frames['frame3'])
         self.plot_frame.grid(row=2, column=1, sticky="nsew")
         
-        self.live_plot_label = customtkinter.CTkLabel(self.labels_frame, text="")
+        self.live_plot_label = customtkinter.CTkLabel(self.labels_frame, text="No scan in progress")
         self.live_plot_label.pack(pady=10, padx=10)
+        self.detection_msg = customtkinter.CTkLabel(self.labels_frame, text="")
+        self.detection_msg.pack(pady=10, padx=10)
         bt_side4 = customtkinter.CTkButton(self.labels_frame, text="", command=self.stop_capture2)
         bt_side4.pack(pady=10, padx=10)
-         
+
+        
         
         # Matplotlib figure
         self.figure = plt.Figure(figsize=(5, 5), dpi=100)
@@ -304,6 +317,29 @@ class App(customtkinter.CTk):
 
         # Call the animate function
         self.animate()
+
+
+        App.frames['frame4'] = customtkinter.CTkFrame(main_container)
+        bt_detect_f4 = customtkinter.CTkButton(self.frames['frame4'], text="View Data", command=self.processed_table)
+        bt_detect_f4.grid(row=1, column=0, columnspan=3, padx=(20, 20), pady=(10, 20), sticky="nsew")
+        # self.progressbar_1 = customtkinter.CTkProgressBar(App.frames['frame3'])
+        # self.progressbar_1.grid(row=1, column=0, padx=(20, 10), pady=(10, 10), sticky="nsew")
+        self.bt_side_f4 = customtkinter.CTkButton(self.frames['frame4'], text="Live Detect", command=self.start_capture_pre)
+        self.bt_side_f4.grid(row=0, column=0, padx=(20, 10), pady=(20, 10), sticky="nsew")
+        
+        self.bt_side2_f4 = customtkinter.CTkButton(self.frames['frame4'], text="Stop", command=self.stop_capture_pre)
+        self.bt_side2_f4.grid(row=0, column=1,columnspan=2, padx=(10,20), pady=(20, 10), sticky="nsew")
+        self.bt_side2_f4.configure(fg_color = "red")
+        self.bt_side2_f4.configure(hover_color ="#D16165033" )
+        self.bt_side2_f4.configure(state = "disabled")
+        # Configure column weights for proper resizing
+        self.frames['frame4'].grid_columnconfigure(0, weight=1)
+        self.frames['frame4'].grid_columnconfigure(1, weight=1)
+        self.frames['frame4'].grid_columnconfigure(2, weight=1)
+        # self.labels_frame_f4 = customtkinter.CTkFrame(self.frames['frame4'])
+        # self.labels_frame_f4.grid(row=2, column=0, sticky="nsew")
+        self.live_plot_label_capture = customtkinter.CTkLabel(self.frames['frame4'], text="")
+        self.live_plot_label_capture.grid(row=2, column=1,columnspan=2, padx=(10,20), pady=(20, 10), sticky="nsew")
 
     def animate(self):
         self.timestamps = []
@@ -487,11 +523,33 @@ class App(customtkinter.CTk):
           # Output file where captured traffic will be stored
         try:
             if not self.capture_running:
-                self.live_plot_label.configure(text ="Capturing...")
+                # self.live_plot_label.configure(text ="Capturing...")
                 self.bt_side2.configure(state = "normal") 
                 self.bt_side1.configure(state = "disabled")
                 self.bt_side2.configure(fg_color = "red")
                 self.bt_side2.configure(hover_color ="#D16165033" )
+                interface = self.label_adaptername.cget("text")
+                # Start capturing traffic
+                # interface = "Wi-Fi"  # Update with your interface
+                self.capture_process = threading.Thread(target=self.start_capture(interface, self.output_file),daemon = True)
+                self.capture_process.start()
+                self.capture_running = True
+                # messagebox.showinfo("Capture Started", f"Capturing traffic on interface {interface}.")
+            else:
+                messagebox.showwarning("Warning", "Capture process is already running.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to start capture: {str(e)}")
+            print(e)
+    csv_output = "outputnew678912.csv"
+    def start_capture_pre(self):
+          # Output file where captured traffic will be stored
+        try:
+            if not self.capture_running:
+                self.live_plot_label_capture.configure(text ="Capturing...")
+                self.bt_side2_f4.configure(state = "normal") 
+                self.bt_side_f4.configure(state = "disabled")
+                self.bt_side2_f4.configure(fg_color = "red")
+                self.bt_side2_f4.configure(hover_color ="#D16165033" )
                 interface = self.label_adaptername.cget("text")
                 # Start capturing traffic
                 # interface = "Wi-Fi"  # Update with your interface
@@ -509,9 +567,9 @@ class App(customtkinter.CTk):
 
     def stop_capture2(self):
         try:
-            self.live_plot_label.configure(text="")
-            # self.bt_side2.configure(state="disabled")
-            # self.bt_side1.configure(state="normal")
+            # self.live_plot_label.configure(text="Capturing..")
+            # self.bt_side2_f4.configure(state="disabled")
+            # self.bt_side_f4.configure(state="normal")
 
             if self.capture_running:
                 print("Stopping capture...")
@@ -527,6 +585,33 @@ class App(customtkinter.CTk):
                 # else:
                 #     print("Thread has finished executing")
                 # messagebox.showinfo("Capture Stopped", "Capture stopped successfully.")
+
+            # else:
+                # messagebox.showwarning("Warning", "Capture process is not running.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Failed to stop capture: {str(e)}")
+            print(e)
+    def stop_capture_pre(self):
+        try:
+            self.live_plot_label_capture.configure(text="Capture Finished")
+            self.bt_side2_f4.configure(state="disabled")
+            self.bt_side_f4.configure(state="normal")
+
+            if self.capture_running:
+                print("Stopping capture...")
+                self.capture_running = False
+                self.process.terminate()
+                self.capture_process.join()  # Wait for capture process to finish
+                self.processing_csv()
+                # Start the CSV conversion in a separate thread
+                self.start_csv_conversion(self.output_file, self.csv_output)
+                # self.csv_thread.start()
+                # if self.csv_thread.is_alive():
+                #     print("Thread is still running after joining")
+                # else:
+                #     print("Thread has finished executing")
+                messagebox.showinfo("Capture Stopped", "Capture stopped successfully.")
+
             else:
                 messagebox.showwarning("Warning", "Capture process is not running.")
         except Exception as e:
@@ -545,6 +630,8 @@ class App(customtkinter.CTk):
             self.live_plot_label.configure(text ="Processing Data")
         self.after(1000, self.processing_csv)    
 
+    
+
     def start_csv_conversion(self, input_file, output_file):
         try:
             # Start the CSV conversion
@@ -553,7 +640,7 @@ class App(customtkinter.CTk):
             # self.csv_thread_pcap.start()
 
             subprocess.Popen(["python", "netstat.py"])
-            self.processing_csv()
+            # self.processing_csv()
     # Wait for the process to finish and capture its output
             # stdout_data, stderr_data = process.communicate()
             
@@ -573,18 +660,86 @@ class App(customtkinter.CTk):
         # global capture_interval_running
         # Set the flag to indicate that the capture interval should stop
         self.capture_interval_running = False
+        # print("Stopping capture...")
+        # time.sleep(5)
+        # print("Capture stopped after 5 seconds.")
+        
+
         # Stop the capture process if it's running
         if self.capture_process and self.capture_process.is_alive():
-            self.capture_process.cancel()
+            self.live_plot_label.configure(text ="Stopping scanning...")
             self.bt_side2.configure(state="disabled")
-            self.bt_side1.configure(state="normal")
-            messagebox.showinfo("Capture Stopped", "Capture stopped successfully.")
+            self.bt_side1.configure(state="disabled")
+            self.capture_process.cancel()
+            def delete_files():
+                self.live_plot_label.configure(text ="No scan in progress")
+                try:
+                    # File paths to delete
+                    csv_file = "data_with_predictions.csv"
+                    pcap_file = "output.pcap"
 
+                    # Delete CSV file if exists
+                    if os.path.exists(csv_file):
+                        os.remove("outputnew678912.csv")
+                        empty_df = pd.DataFrame()
+                        empty_df.to_csv(csv_file, index=False)
+                        print(f"Deleted file: {csv_file}")
+
+                    # Delete PCAP file if exists
+                    if os.path.exists(pcap_file):
+                        os.remove(pcap_file)
+                        print(f"Deleted file: {pcap_file}")
+
+                except Exception as e:
+                    print(f"Error deleting files: {e}")
+                self.bt_side1.configure(state = "normal")
+        # Schedule the function to delete files after 10 seconds
+            threading.Timer(5.0, delete_files).start()
+       
+            print("Stopping scanning process")
+            # self.bt_side1.configure(state = "normal")
+            
+            # messagebox.showinfo("Capture Stopped", "Capture stopped successfully.")
+
+
+    def check_botnet(self):
+        try:
+            # Read the CSV file
+            df = pd.read_csv("data_with_predictions.csv")
+
+            # Check if the 'Label' column exists
+            if 'Predicted_Label' not in df.columns:
+                print("Error: 'Label' column not found in the CSV file.")
+                print("no botnet")
+                return
+
+            # Check the distribution of the 'Label' column
+            label_counts = df['Predicted_Label'].value_counts(normalize=True)
+
+            # Check if label '1' is greater than 80%
+            if label_counts.get(1, 0) > 0.8:
+                print("Botnet detected!")
+                self.detection_msg.configure(text ="Botnet detected!")
+            else:
+                print("No botnet detected.")
+                self.detection_msg.configure(text ="No botnet detected")
+
+        except Exception as e:
+            print(f"Error: {e}")
+
+    def capture_interval_start(self):
+    # Set the flag to indicate that the capture interval is running
+        
+        interface = self.label_adaptername.cget("text")
+        self.live_plot_label.configure(text ="Scanning...")
+        messagebox.showinfo("Capture Started", f"Capturing traffic on interface {interface}.")
+        self.capture_interval()
 
     def capture_interval(self):
     # Set the flag to indicate that the capture interval is running
         self.capture_interval_running = True
-
+        self.live_plot_label.configure(text ="Scanning...")
+        
         # Start the capture
         self.start_capture1()
 
@@ -597,7 +752,10 @@ class App(customtkinter.CTk):
 
         # Schedule the next capture to start after 20 seconds
         if self.capture_interval_running:
+            self.live_plot_label.configure(text ="Scanning...")
             self.capture_process = threading.Timer(20.0, self.capture_interval)
+            self.live_plot_label.configure(text ="Scanning...")
+            self.check_botnet()
             self.capture_process.start()
 
      
@@ -683,7 +841,10 @@ class App(customtkinter.CTk):
             self.toplevel_window.focus()
     def processed_table(self):
         if self.csvwindow is None or not self.toplevel_window.winfo_exists():
-                self.toplevel_window = CsvWindow(self)
+                # self.toplevel_window = CsvWindow(self)
+                subprocess.Popen(["python", "csv_view.py"])
+                # csv_window_thread = CsvWindowThread(self)
+                # csv_window_thread.start()
         else:
                 self.toplevel_window.focus()
     def update_network_info(self):

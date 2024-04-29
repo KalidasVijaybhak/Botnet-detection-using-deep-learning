@@ -3,6 +3,24 @@ import random
 import csv
 from CTkTable import *
 from CTkXYFrame import *
+
+
+import threading
+
+class CsvWindowThread(threading.Thread):
+    def __init__(self, parent):
+        self.toplevel_window = None
+        self.csvwindow = None
+        threading.Thread.__init__(self)
+        self.parent = parent
+
+    def run(self):
+        self.toplevel_window = CsvWindow(self.parent)
+
+
+# Assuming this code is inside a class or function
+# Create and start the thread
+
 class CsvWindow(customtkinter.CTk):
 
 
