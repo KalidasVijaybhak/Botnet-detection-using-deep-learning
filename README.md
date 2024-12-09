@@ -1,12 +1,5 @@
-# Botnet detection using deep learning techniques (CNN-LSTM Hybrid Model) 
-
-
-https://github.com/user-attachments/assets/38f02e73-9985-482f-ae53-b62370f4dbf9
-
-
 # Deep Learning Approach for Botnet Detection from Raw Network Traffic Data
-
-![Botnet Detection](link_to_banner_image)
+https://github.com/user-attachments/assets/38f02e73-9985-482f-ae53-b62370f4dbf9
 
 ## Overview
 This project aims to develop an adaptive botnet detection system using deep learning techniques to overcome the limitations of signature-based and rule-based methods. The system is designed to analyze raw network traffic data and identify patterns and anomalies indicative of botnet activity.
