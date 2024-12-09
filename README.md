@@ -30,8 +30,6 @@ A botnet is a network of compromised computers, known as "bots," controlled by a
 - **Infecting Systems**: Spreading malware to other devices.
 - **Phishing**: Tricking users into revealing sensitive information.
 
-![How a Botnet Works](link_to_botnet_image)
-
 ## Relevance of Botnet Detection
 Botnets pose significant threats to cybersecurity, leading to financial losses, legal issues, and damage to reputation. Effective botnet detection is crucial for:
 
@@ -99,9 +97,6 @@ The CTU-13 dataset is a collection of network traffic data commonly used for bot
   - Live network capture and detection of botnet.
   - Live network capture and converting to PCAP with the option to choose required features.
 - The UI uses the CNN-LSTM model due to its higher accuracy on unseen network data.
-
-## Timeline
-![Project Timeline](link_to_timeline_image)
 
 ## Conclusion
 Conventional botnet detection tools, which often rely on signature-based or rule-based approaches, can be effective in certain scenarios but also have limitations when it comes to detecting modern and sophisticated botnets. By training on diverse datasets, the models attain a deep understanding of normal network behavior, allowing them to identify deviations indicative of botnet activity. From analyzing different models, the best model used in the application is the CNN-LSTM hybrid model.
