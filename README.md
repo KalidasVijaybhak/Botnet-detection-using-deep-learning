@@ -3,26 +3,48 @@
 
 https://github.com/user-attachments/assets/38f02e73-9985-482f-ae53-b62370f4dbf9
 
+
 # Deep Learning Approach for Botnet Detection from Raw Network Traffic Data
+
+![Botnet Detection](link_to_banner_image)
 
 ## Overview
 This project aims to develop an adaptive botnet detection system using deep learning techniques to overcome the limitations of signature-based and rule-based methods. The system is designed to analyze raw network traffic data and identify patterns and anomalies indicative of botnet activity.
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Problem Statement](#problem-statement)
-3. [Aim](#aim)
-4. [Dataset](#dataset)
-5. [Model Architecture](#model-architecture)
-6. [User Interface](#user-interface)
-7. [Timeline](#timeline)
-8. [Conclusion](#conclusion)
+2. [What is a Botnet?](#what-is-a-botnet)
+3. [Relevance of Botnet Detection](#relevance-of-botnet-detection)
+4. [Problem Statement](#problem-statement)
+5. [Aim](#aim)
+6. [Dataset](#dataset)
+7. [Model Architecture](#model-architecture)
+8. [User Interface](#user-interface)
+9. [Timeline](#timeline)
+10. [Conclusion](#conclusion)
+11. [Contributors](#contributors)
+12. [License](#license)
+13. [Acknowledgments](#acknowledgments)
 
 ## Introduction
-The modern world is heavily reliant on digital technology, making cybersecurity a critical concern. Cyberattacks, such as malware, phishing, ransomware, and DDoS attacks, disrupt operations, steal information, and cause financial harm. Botnets are networks of compromised computers (bots) controlled by a central server, often without the knowledge of the device owners. Deep learning algorithms can analyze vast amounts of data, identifying patterns and anomalies that may be indicative of cyber threats, even those that evolve and adapt over time.
+The modern world is heavily reliant on digital technology, making cybersecurity a critical concern. Cyberattacks, such as malware, phishing, ransomware, and DDoS attacks, disrupt operations, steal information, and cause financial harm. Deep learning algorithms can analyze vast amounts of data, identifying patterns and anomalies that may be indicative of cyber threats, even those that evolve and adapt over time.
 
-## How a Botnet Works
-![Botnet Workflow](link_to_botnet_image)
+## What is a Botnet?
+A botnet is a network of compromised computers, known as "bots," controlled by a central server, often without the knowledge of the device owners. These bots can be used to perform various malicious activities, including:
+
+- **Spam Generation**: Sending large volumes of unsolicited emails.
+- **DDoS Attacks**: Overwhelming a target server with traffic to make it unavailable.
+- **Infecting Systems**: Spreading malware to other devices.
+- **Phishing**: Tricking users into revealing sensitive information.
+
+![How a Botnet Works](link_to_botnet_image)
+
+## Relevance of Botnet Detection
+Botnets pose significant threats to cybersecurity, leading to financial losses, legal issues, and damage to reputation. Effective botnet detection is crucial for:
+
+- **Protecting Networks**: Preventing unauthorized access and data breaches.
+- **Maintaining Service Availability**: Ensuring that services remain accessible and functional.
+- **Safeguarding Sensitive Information**: Protecting user data and intellectual property.
 
 ## Problem Statement
 Develop an adaptive botnet detection system using deep learning techniques to overcome the limitations of signature-based and rule-based methods, ensuring effective detection of evolving tactics in network traffic.
@@ -42,7 +64,7 @@ Develop an adaptive botnet detection system using deep learning techniques to ov
 The CTU-13 dataset is a collection of network traffic data commonly used for botnet detection systems (IDS). It contains network traffic captures from a diverse range of botnet and normal activities, providing a valuable resource for cybersecurity research and development.
 
 ### Feature Extraction
-- Correlation, in the realm of data analysis, denotes the statistical association or relationship between two or more variables.
+- **Correlation**: Denotes the statistical association or relationship between two or more variables.
 - We have tried different feature extraction methods like information gain.
 - By Information gain, the accuracy obtained from the CNN-LSTM model was about 96.32%, which was lower compared to features selected from Correlation.
 
